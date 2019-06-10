@@ -1,0 +1,14 @@
+C:\Users\amit.pandey1\source\repos\QuotesApi\QuotesApi\bin\Debug\netcoreapp2.1\QuotesApi.deps.json
+C:\Users\amit.pandey1\source\repos\QuotesApi\QuotesApi\bin\Debug\netcoreapp2.1\QuotesApi.runtimeconfig.json
+C:\Users\amit.pandey1\source\repos\QuotesApi\QuotesApi\bin\Debug\netcoreapp2.1\QuotesApi.runtimeconfig.dev.json
+C:\Users\amit.pandey1\source\repos\QuotesApi\QuotesApi\bin\Debug\netcoreapp2.1\QuotesApi.dll
+C:\Users\amit.pandey1\source\repos\QuotesApi\QuotesApi\bin\Debug\netcoreapp2.1\QuotesApi.pdb
+C:\Users\amit.pandey1\source\repos\QuotesApi\QuotesApi\obj\Debug\netcoreapp2.1\QuotesApi.csproj.CoreCompileInputs.cache
+C:\Users\amit.pandey1\source\repos\QuotesApi\QuotesApi\obj\Debug\netcoreapp2.1\QuotesApi.RazorAssemblyInfo.cache
+C:\Users\amit.pandey1\source\repos\QuotesApi\QuotesApi\obj\Debug\netcoreapp2.1\QuotesApi.RazorAssemblyInfo.cs
+C:\Users\amit.pandey1\source\repos\QuotesApi\QuotesApi\obj\Debug\netcoreapp2.1\QuotesApi.AssemblyInfoInputs.cache
+C:\Users\amit.pandey1\source\repos\QuotesApi\QuotesApi\obj\Debug\netcoreapp2.1\QuotesApi.AssemblyInfo.cs
+C:\Users\amit.pandey1\source\repos\QuotesApi\QuotesApi\obj\Debug\netcoreapp2.1\QuotesApi.RazorTargetAssemblyInfo.cache
+C:\Users\amit.pandey1\source\repos\QuotesApi\QuotesApi\obj\Debug\netcoreapp2.1\QuotesApi.dll
+C:\Users\amit.pandey1\source\repos\QuotesApi\QuotesApi\obj\Debug\netcoreapp2.1\QuotesApi.pdb
+C:\Users\amit.pandey1\source\repos\QuotesApi\QuotesApi\obj\Debug\netcoreapp2.1\QuotesApi.csprojAssemblyReference.cache
