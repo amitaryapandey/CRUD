@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .student-selector {
+            margin-top: 20px;
+        }
+
+        .student-selector select {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+            min-width: 300px;
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .student-info {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .student-info h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #333;
+            font-size: 16px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .course-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .course-code {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .course-name {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .course-details {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .grade-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .grade-A { background: #4caf50; color: white; }
+        .grade-B { background: #8bc34a; color: white; }
+        .grade-C { background: #ffc107; color: white; }
+        .grade-D { background: #ff9800; color: white; }
+        .grade-F { background: #f44336; color: white; }
+
+        .assignment-list {
+            list-style: none;
+        }
+
+        .assignment-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: background 0.2s;
+        }
+
+        .assignment-item:hover {
+            background: #f8f9fa;
+        }
+
+        .assignment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .assignment-title {
+            font-weight: bold;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .assignment-course {
+            color: #667eea;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .assignment-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-submitted { background: #2196f3; color: white; }
+        .status-graded { background: #4caf50; color: white; }
+        .status-pending { background: #ff9800; color: white; }
+
+        .score {
+            font-weight: bold;
+            color: #4caf50;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: white;
+            font-size: 18px;
+        }
+
+        .error {
+            background: #f44336;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #999;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 Student Dashboard</h1>
+            <p>View student information, courses, assignments, and performance statistics</p>
+            
+            <div class="student-selector">
+                <label for="studentSelect"><strong>Select Student:</strong></label>
+                <select id="studentSelect">
+                    <option value="">-- Select a student --</option>
+                </select>
+            </div>
+        </header>
+
+        <div id="loading" class="loading">Loading students...</div>
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="dashboard" class="dashboard">
+            <!-- Student Info -->
+            <div class="student-info">
+                <h2 id="studentName"></h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Student ID</div>
+                        <div class="info-value" id="studentId"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Email</div>
+                        <div class="info-value" id="studentEmail"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Major</div>
+                        <div class="info-value" id="studentMajor"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Year</div>
+                        <div class="info-value" id="studentYear"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">GPA</div>
+                        <div class="info-value" id="studentGpa"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalCourses">0</div>
+                    <div class="stat-label">Total Courses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalAssignments">0</div>
+                    <div class="stat-label">Total Assignments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="submittedAssignments">0</div>
+                    <div class="stat-label">Submitted</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="gradedAssignments">0</div>
+                    <div class="stat-label">Graded</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="averageScore">0%</div>
+                    <div class="stat-label">Average Score</div>
+                </div>
+            </div>
+
+            <!-- Courses -->
+            <div class="section">
+                <h3>📚 Enrolled Courses</h3>
+                <div id="coursesList" class="course-grid"></div>
+            </div>
+
+            <!-- Upcoming Assignments -->
+            <div class="section">
+                <h3>⏰ Upcoming Assignments</h3>
+                <ul id="upcomingAssignments" class="assignment-list"></ul>
+            </div>
+
+            <!-- All Assignments -->
+            <div class="section">
+                <h3>📝 All Assignments</h3>
+                <ul id="allAssignments" class="assignment-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        let students = [];
+
+        // Load students on page load
+        async function loadStudents() {
+            try {
+                const response = await fetch(`${API_BASE}/students`);
+                if (!response.ok) throw new Error('Failed to load students');
+                
+                students = await response.json();
+                const select = document.getElementById('studentSelect');
+                
+                students.forEach(student => {
+                    const option = document.createElement('option');
+                    option.value = student.id;
+                    option.textContent = `${student.name} (${student.studentId})`;
+                    select.appendChild(option);
+                });
+
+                document.getElementById('loading').style.display = 'none';
+            } catch (error) {
+                showError('Failed to load students: ' + error.message);
+            }
+        }
+
+        // Load dashboard for selected student
+        async function loadDashboard(studentId) {
+            try {
+                document.getElementById('loading').style.display = 'block';
+                document.getElementById('dashboard').classList.remove('active');
+
+                const response = await fetch(`${API_BASE}/students/${studentId}/dashboard`);
+                if (!response.ok) throw new Error('Failed to load dashboard');
+                
+                const data = await response.json();
+                displayDashboard(data);
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('dashboard').classList.add('active');
+            } catch (error) {
+                showError('Failed to load dashboard: ' + error.message);
+            }
+        }
+
+        function displayDashboard(data) {
+            // Student info
+            document.getElementById('studentName').textContent = data.student.name;
+            document.getElementById('studentId').textContent = data.student.studentId;
+            document.getElementById('studentEmail').textContent = data.student.email;
+            document.getElementById('studentMajor').textContent = data.student.major;
+            document.getElementById('studentYear').textContent = `Year ${data.student.year}`;
+            document.getElementById('studentGpa').textContent = data.student.gpa ? data.student.gpa.toFixed(2) : 'N/A';
+
+            // Statistics
+            document.getElementById('totalCourses').textContent = data.statistics.totalCourses;
+            document.getElementById('totalAssignments').textContent = data.statistics.totalAssignments;
+            document.getElementById('submittedAssignments').textContent = data.statistics.submittedAssignments;
+            document.getElementById('gradedAssignments').textContent = data.statistics.gradedAssignments;
+            document.getElementById('averageScore').textContent = data.statistics.averageScore + '%';
+
+            // Courses
+            const coursesList = document.getElementById('coursesList');
+            coursesList.innerHTML = '';
+            if (data.courses.length === 0) {
+                coursesList.innerHTML = '<div class="empty-state">No courses enrolled</div>';
+            } else {
+                data.courses.forEach(course => {
+                    const courseCard = document.createElement('div');
+                    courseCard.className = 'course-card';
+                    courseCard.innerHTML = `
+                        <div class="course-code">${course.code}</div>
+                        <div class="course-name">${course.name}</div>
+                        <div class="course-details">
+                            <div>Instructor: ${course.instructor}</div>
+                            <div>Credits: ${course.credits} | Semester: ${course.semester}</div>
+                        </div>
+                        ${course.grade ? `<span class="grade-badge grade-${course.grade}">${course.grade}</span>` : ''}
+                    `;
+                    coursesList.appendChild(courseCard);
+                });
+            }
+
+            // Upcoming assignments
+            const upcomingList = document.getElementById('upcomingAssignments');
+            upcomingList.innerHTML = '';
+            if (data.upcomingAssignments.length === 0) {
+                upcomingList.innerHTML = '<div class="empty-state">No upcoming assignments</div>';
+            } else {
+                data.upcomingAssignments.forEach(assignment => {
+                    upcomingList.appendChild(createAssignmentItem(assignment));
+                });
+            }
+
+            // All assignments
+            const allList = document.getElementById('allAssignments');
+            allList.innerHTML = '';
+            if (data.assignments.length === 0) {
+                allList.innerHTML = '<div class="empty-state">No assignments</div>';
+            } else {
+                data.assignments.forEach(assignment => {
+                    allList.appendChild(createAssignmentItem(assignment));
+                });
+            }
+        }
+
+        function createAssignmentItem(assignment) {
+            const li = document.createElement('li');
+            li.className = 'assignment-item';
+            
+            const dueDate = new Date(assignment.dueDate);
+            const submittedDate = assignment.submittedAt ? new Date(assignment.submittedAt) : null;
+            
+            let statusBadge = '<span class="status-badge status-pending">Pending</span>';
+            if (assignment.submissionStatus === 'graded') {
+                statusBadge = '<span class="status-badge status-graded">Graded</span>';
+            } else if (assignment.submissionStatus === 'submitted') {
+                statusBadge = '<span class="status-badge status-submitted">Submitted</span>';
+            }
+
+            let scoreDisplay = '';
+            if (assignment.pointsEarned !== null) {
+                const percentage = ((assignment.pointsEarned / assignment.maxPoints) * 100).toFixed(1);
+                scoreDisplay = `<span class="score">${assignment.pointsEarned}/${assignment.maxPoints} (${percentage}%)</span>`;
+            }
+
+            li.innerHTML = `
+                <div class="assignment-header">
+                    <div>
+                        <div class="assignment-title">${assignment.title}</div>
+                        <div class="assignment-course">${assignment.courseCode} - ${assignment.courseName}</div>
+                    </div>
+                    ${statusBadge}
+                </div>
+                ${assignment.description ? `<div style="color: #666; margin: 10px 0;">${assignment.description}</div>` : ''}
+                <div class="assignment-meta">
+                    <div>📅 Due: ${dueDate.toLocaleDateString()} ${dueDate.toLocaleTimeString()}</div>
+                    <div>📊 Max Points: ${assignment.maxPoints}</div>
+                    ${submittedDate ? `<div>✅ Submitted: ${submittedDate.toLocaleDateString()}</div>` : ''}
+                    ${scoreDisplay}
+                </div>
+            `;
+            
+            return li;
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Event listeners
+        document.getElementById('studentSelect').addEventListener('change', (e) => {
+            const studentId = e.target.value;
+            if (studentId) {
+                loadDashboard(studentId);
+            } else {
+                document.getElementById('dashboard').classList.remove('active');
+            }
+        });
+
+        // Initialize
+        loadStudents();
+    </script>
+</body>
+</html>

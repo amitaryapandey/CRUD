@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,6 +28,19 @@ namespace QuotesApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<QuotesDbContext>(option => option.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=QuotesDb;"));
+            
+            // Add CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
+                    });
+            });
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -42,6 +55,13 @@ namespace QuotesApi
             {
                 app.UseHsts();
             }
+
+            // Enable CORS
+            app.UseCors("AllowAll");
+            
+            // Enable static files
+            app.UseStaticFiles();
+            app.UseDefaultFiles();
 
             app.UseHttpsRedirection();
             quotesDbContext.Database.EnsureCreated();

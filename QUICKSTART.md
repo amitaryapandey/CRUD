@@ -1,353 +1,194 @@
-# .NET CRUD API - Quick Start Guide
+# Quick Start Guide - Student Dashboard
 
-## Overview
+## Prerequisites
+- .NET Core 2.1 SDK or later
+- SQL Server LocalDB (included with Visual Studio)
 
-This is a complete **CRUD (Create, Read, Update, Delete)** API built with **ASP.NET Core 2.1** and **Entity Framework Core**. It demonstrates best practices for building RESTful APIs in .NET.
+## Getting Started
 
-## 🚀 Quick Start
-
-### Prerequisites
-- .NET Core 2.1 SDK or higher
-- SQL Server LocalDB (or modify connection string)
-- Visual Studio, VS Code, or any text editor
-
-### Installation & Running
-
+### 1. Clone and Run
 ```bash
-# 1. Restore NuGet packages
+git clone <repository-url>
+cd CRUD
 dotnet restore
-
-# 2. Build the project
-dotnet build
-
-# 3. Run the application
 dotnet run
-
-# 4. API will be available at:
-# https://localhost:5001/api/quotes
 ```
 
----
+### 2. Access the Dashboard
+Open your browser and navigate to:
+- **Dashboard UI**: `https://localhost:5001/` or `http://localhost:5000/`
+- **API**: `https://localhost:5001/api/students`
 
-## 📁 Project Structure
+### 3. Sample Data
+The application automatically seeds sample data on first run:
+- 4 Students (Alice, Bob, Carol, David)
+- 4 Courses (CS101, CS201, MATH301, PHYS201)
+- 8 Enrollments
+- 8 Assignments
+- 9 Submissions
 
-```
-QuotesApi/
-│
-├── Controllers/
-│   ├── QuotesController.cs          ✅ API endpoints (CRUD operations)
-│   └── ValuesController.cs
-│
-├── Models/
-│   └── Quote.cs                     ✅ Data model
-│
-├── Data/
-│   └── QuotesDbContext.cs           ✅ Entity Framework DbContext
-│
-├── Services/
-│   ├── IQuoteService.cs             ✅ Service interface
-│   └── QuoteService.cs              ✅ Service implementation
-│
-├── Program.cs                       ✅ Application entry point
-├── Startup.cs                       ✅ Service configuration
-├── appsettings.json                 ✅ Configuration
-├── QuotesApi.csproj                 ✅ Project file
-│
-├── CRUD_OPERATIONS.md               📖 Detailed API documentation
-├── CRUD_EXAMPLES.md                 📖 Usage examples
-└── QUICKSTART.md                    📖 This file
-```
+### 4. Using the Dashboard
 
----
+#### View Student Dashboard
+1. Open the web UI at the root URL
+2. Select a student from the dropdown
+3. View their:
+   - Personal information
+   - Statistics (courses, assignments, scores)
+   - Enrolled courses with grades
+   - Upcoming assignments
+   - All assignments with submission status
 
-## 🔧 API Endpoints
+#### API Examples
 
-### Base URL
-```
-https://localhost:5001/api/quotes
-```
-
-### Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| **GET** | `/api/quotes` | Get all quotes |
-| **GET** | `/api/quotes/{id}` | Get quote by ID |
-| **POST** | `/api/quotes` | Create new quote |
-| **PUT** | `/api/quotes/{id}` | Update quote |
-| **DELETE** | `/api/quotes/{id}` | Delete quote |
-
----
-
-## 📝 Quick Examples
-
-### 1. Create a Quote (POST)
-
+**Get all students:**
 ```bash
-curl -X POST https://localhost:5001/api/quotes \
+curl https://localhost:5001/api/students
+```
+
+**Get student dashboard:**
+```bash
+curl https://localhost:5001/api/students/1/dashboard
+```
+
+**Create a new student:**
+```bash
+curl -X POST https://localhost:5001/api/students \
   -H "Content-Type: application/json" \
   -d '{
-    "title": "The only way to do great work",
-    "author": "Steve Jobs",
-    "description": "Passion and dedication lead to excellence"
+    "name": "Jane Doe",
+    "email": "jane.doe@university.edu",
+    "studentId": "STU005",
+    "major": "Engineering",
+    "year": 2,
+    "gpa": 3.75
   }'
 ```
 
-**Response (201 Created):**
-```json
-{
-  "id": 1,
-  "title": "The only way to do great work",
-  "author": "Steve Jobs",
-  "description": "Passion and dedication lead to excellence"
-}
-```
-
----
-
-### 2. Get All Quotes (GET)
-
+**Enroll student in course:**
 ```bash
-curl https://localhost:5001/api/quotes
-```
-
-**Response (200 OK):**
-```json
-[
-  {
-    "id": 1,
-    "title": "The only way to do great work",
-    "author": "Steve Jobs",
-    "description": "Passion and dedication lead to excellence"
-  }
-]
-```
-
----
-
-### 3. Get Single Quote (GET)
-
-```bash
-curl https://localhost:5001/api/quotes/1
-```
-
-**Response (200 OK):**
-```json
-{
-  "id": 1,
-  "title": "The only way to do great work",
-  "author": "Steve Jobs",
-  "description": "Passion and dedication lead to excellence"
-}
-```
-
----
-
-### 4. Update Quote (PUT)
-
-```bash
-curl -X PUT https://localhost:5001/api/quotes/1 \
+curl -X POST https://localhost:5001/api/enrollments \
   -H "Content-Type: application/json" \
   -d '{
-    "title": "Updated Title",
-    "author": "Updated Author",
-    "description": "Updated Description"
+    "studentId": 1,
+    "courseId": 1
   }'
 ```
 
-**Response (204 No Content)** - Empty body
-
----
-
-### 5. Delete Quote (DELETE)
-
+**Submit an assignment:**
 ```bash
-curl -X DELETE https://localhost:5001/api/quotes/1
+curl -X POST https://localhost:5001/api/submissions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "assignmentId": 1,
+    "studentId": 1
+  }'
 ```
 
-**Response (204 No Content)** - Empty body
-
----
-
-## 🏗️ Architecture
-
-### Layered Architecture
-
-```
-┌─────────────────────────────────────┐
-│     HTTP Requests/Responses         │
-├─────────────────────────────────────┤
-│     Controllers Layer               │
-│  (QuotesController.cs)              │
-├─────────────────────────────────────┤
-│     Services Layer                  │
-│  (IQuoteService, QuoteService)      │
-├─────────────────────────────────────┤
-│     Data Layer                      │
-│  (QuotesDbContext, Entity Framework)│
-├─────────────────────────────────────┤
-│     Database                        │
-│  (SQL Server LocalDB)               │
-└─────────────────────────────────────┘
+**Grade a submission:**
+```bash
+curl -X PUT https://localhost:5001/api/submissions/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pointsEarned": 95
+  }'
 ```
 
----
+## API Endpoints Summary
 
-## 🎯 Key Features
+### Students
+- `GET /api/students` - List all students
+- `GET /api/students/{id}` - Get student details
+- `GET /api/students/{id}/dashboard` - Get complete dashboard
+- `POST /api/students` - Create student
+- `PUT /api/students/{id}` - Update student
+- `DELETE /api/students/{id}` - Delete student
 
-✅ **Complete CRUD Operations** - Create, Read, Update, Delete
-✅ **Error Handling** - Try-catch with meaningful error messages
-✅ **HTTP Status Codes** - Proper status codes (200, 201, 204, 400, 404, 500)
-✅ **Input Validation** - Required field validation
-✅ **Entity Framework Core** - ORM for database operations
-✅ **Dependency Injection** - Built-in DI container
-✅ **Service Layer** - Separation of concerns
-✅ **XML Documentation** - Detailed API comments
-✅ **RESTful Design** - Follows REST principles
+### Courses
+- `GET /api/courses` - List all courses
+- `GET /api/courses/{id}` - Get course details
+- `POST /api/courses` - Create course
+- `PUT /api/courses/{id}` - Update course
+- `DELETE /api/courses/{id}` - Delete course
 
----
+### Enrollments
+- `GET /api/enrollments` - List all enrollments
+- `GET /api/enrollments/{id}` - Get enrollment details
+- `POST /api/enrollments` - Enroll student
+- `PUT /api/enrollments/{id}` - Update enrollment/grade
+- `DELETE /api/enrollments/{id}` - Drop enrollment
 
-## 📊 HTTP Status Codes
+### Assignments
+- `GET /api/assignments` - List all assignments
+- `GET /api/assignments/{id}` - Get assignment details
+- `POST /api/assignments` - Create assignment
+- `PUT /api/assignments/{id}` - Update assignment
+- `DELETE /api/assignments/{id}` - Delete assignment
 
-| Code | Meaning | When Used |
-|------|---------|-----------|
-| **200** | OK | GET successful |
-| **201** | Created | POST successful |
-| **204** | No Content | PUT/DELETE successful |
-| **400** | Bad Request | Invalid input data |
-| **404** | Not Found | Resource doesn't exist |
-| **500** | Server Error | Internal server error |
+### Submissions
+- `GET /api/submissions` - List all submissions
+- `GET /api/submissions/{id}` - Get submission details
+- `POST /api/submissions` - Submit assignment
+- `PUT /api/submissions/{id}` - Update/grade submission
+- `DELETE /api/submissions/{id}` - Delete submission
 
----
+## Dashboard Features
 
-## 🗄️ Database
+### Statistics Card
+- **Total Courses**: Number of courses enrolled
+- **Total Assignments**: All assignments across all courses
+- **Submitted**: Count of submitted assignments
+- **Graded**: Count of graded submissions
+- **Average Score**: Percentage score across all graded work
 
-### Connection String
-```
-Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=QuotesDb;
-```
+### Enrolled Courses
+- Course code and name
+- Credits
+- Instructor
+- Current grade (A, B, C, D, F, or "In Progress")
+- Color-coded grade badges
 
-### Quote Table Schema
-```sql
-CREATE TABLE Quotes (
-    Id INT PRIMARY KEY IDENTITY(1,1),
-    Title NVARCHAR(MAX) NOT NULL,
-    Author NVARCHAR(MAX),
-    Description NVARCHAR(MAX)
-);
-```
+### Upcoming Assignments
+- Shows only assignments that are:
+  - Not yet submitted
+  - Due date is in the future
+- Displays course, title, and due date
 
-### Auto-Creation
-The database is automatically created on first run via `EnsureCreated()` in `Startup.cs`.
+### All Assignments
+- Complete list of assignments from all enrolled courses
+- Shows submission status:
+  - **Pending** (red) - Not submitted
+  - **Submitted** (blue) - Submitted but not graded
+  - **Graded** (green) - Graded with score
+- Displays score as "X/Y points" for graded work
 
----
+## Troubleshooting
 
-## 🧪 Testing
-
-### Using Postman
-
-1. Import the API endpoints into Postman
-2. Set base URL: `https://localhost:5001/api/quotes`
-3. Test each endpoint with sample data
-
-### Using cURL
-
-See [CRUD_EXAMPLES.md](CRUD_EXAMPLES.md) for complete cURL examples.
-
-### Using C# HttpClient
-
-See [CRUD_EXAMPLES.md](CRUD_EXAMPLES.md) for complete C# examples.
-
-### Using JavaScript Fetch
-
-See [CRUD_EXAMPLES.md](CRUD_EXAMPLES.md) for complete JavaScript examples.
-
----
-
-## 📚 Documentation
-
-- **[CRUD_OPERATIONS.md](CRUD_OPERATIONS.md)** - Detailed API documentation
-- **[CRUD_EXAMPLES.md](CRUD_EXAMPLES.md)** - Practical usage examples
-- **[QUICKSTART.md](QUICKSTART.md)** - This file
-
----
-
-## 🔐 Security Considerations
-
-For production deployment, consider:
-
-- ✅ Add authentication (JWT, OAuth)
-- ✅ Add authorization (roles, permissions)
-- ✅ Use HTTPS (not just localhost)
-- ✅ Add rate limiting
-- ✅ Add input sanitization
-- ✅ Add logging and monitoring
-- ✅ Use environment variables for secrets
-- ✅ Add CORS configuration
-
----
-
-## 🚀 Future Enhancements
-
-- [ ] Add pagination for GET all
-- [ ] Implement async/await patterns
-- [ ] Add logging framework (Serilog)
-- [ ] Add authentication/authorization
-- [ ] Add unit tests (xUnit)
-- [ ] Add API versioning
-- [ ] Add caching (Redis)
-- [ ] Add rate limiting
-- [ ] Add Swagger/OpenAPI documentation
-- [ ] Add database migrations (EF Core Migrations)
-
----
-
-## 🛠️ Technologies Used
-
-- **ASP.NET Core 2.1** - Web framework
-- **Entity Framework Core** - ORM
-- **SQL Server LocalDB** - Database
-- **C#** - Programming language
-- **Dependency Injection** - Built-in DI
-
----
-
-## 📖 Model Definition
-
-```csharp
-public class Quote
-{
-    public int Id { get; set; }              // Primary key
-    public string Title { get; set; }        // Quote title (required)
-    public string Author { get; set; }       // Quote author
-    public string Description { get; set; }  // Quote description
-}
+### Database Issues
+If you encounter database errors:
+```bash
+# Delete the database and restart
+rm *.db
+dotnet run
 ```
 
----
+### Port Already in Use
+Edit `Properties/launchSettings.json` to change the port numbers.
 
-## 🤝 Contributing
+### CORS Issues
+The application is configured to allow all origins in development. For production, update `Startup.cs` to restrict CORS.
 
-Feel free to fork, modify, and improve this project!
+## Next Steps
 
----
+1. **Customize the UI**: Edit `wwwroot/index.html` to match your branding
+2. **Add Authentication**: Implement JWT or cookie-based auth
+3. **Add Validation**: Enhance model validation rules
+4. **Add Tests**: Create unit and integration tests
+5. **Deploy**: Publish to Azure, AWS, or your preferred hosting platform
 
-## 📄 License
+## Support
 
-MIT License - Feel free to use this project for learning and development.
-
----
-
-## 📞 Support
-
-For issues or questions:
-1. Check the documentation files
-2. Review the examples
-3. Check the code comments
-
----
-
-**Version:** 1.0  
-**Last Updated:** 2024  
-**Framework:** ASP.NET Core 2.1  
-**Language:** C#
+For issues or questions, refer to:
+- `STUDENT_DASHBOARD.md` - Complete documentation
+- `CRUD_OPERATIONS.md` - CRUD operation examples
+- `IMPLEMENTATION_SUMMARY.md` - Implementation details
